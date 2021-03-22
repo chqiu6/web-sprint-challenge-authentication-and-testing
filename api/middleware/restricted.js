@@ -1,9 +1,9 @@
-const JWT_SECRET =  require("../secret/secret");
+const {JWT_SECRET} =  require("../secret/secret");
 const jwt = require("jsonwebtoken");
 
 
 
-module.exports = (req, res, next) => {
+module.exports = async (req, res, next) => {
   // next();
   /*
     IMPLEMENT
@@ -17,7 +17,7 @@ module.exports = (req, res, next) => {
       the response body should include a string exactly as follows: "token invalid".
   */
   try { 
-    const token = req.cookies.token
+    const token = req.headers.authorization
     if(!token) { 
       res.status(401).json({
         message:"token required"
@@ -26,7 +26,7 @@ module.exports = (req, res, next) => {
       jwt.verify(token, JWT_SECRET, (err, decoded) => {
         if(err) {
           return res.status(401).json({
-            message:"token required"
+            message:"token invalid"
           })
         } else { 
           //token can be used for other middleware if needed 
